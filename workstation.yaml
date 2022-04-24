@@ -1,0 +1,220 @@
+- hosts: local
+  become: true
+  tasks:
+ # update system
+    - name: os update - update apt repositories and cache
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+    - name: os update - upgrade all
+      apt: upgrade=dist force_apt_get=yes
+
+# install apt-transport-https
+    - name: preparation - insall apt-transport-https
+      apt:
+        name: apt-transport-https
+        state: latest
+        update_cache: true
+
+# add keys and additional repositories
+
+    - name: add signing keys - chrome browser
+      apt_key:
+        url: "https://dl-ssl.google.com/linux/linux_signing_key.pub"
+    - name: add chrome browser repository
+      apt_repository:
+        repo: deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
+        state: present
+        filename: google-chrome
+    - name: add signing keys - vscode
+      apt_key:
+        url: "https://packages.microsoft.com/keys/microsoft.asc"
+    - name: add chrome browser repository
+      apt_repository:
+        repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
+        state: present
+        filename: code
+    - name: add mainline ppa
+      apt_repository:
+        repo: 'ppa:cappelikan/ppa'
+
+# install packages from repositories
+    - name: install tools from repositories
+      apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: yes
+      loop:
+        - curl
+        - fonts-powerline
+        - gnome-tweaks
+        - google-chrome-stable
+        - htop
+        - wget
+        - zsh
+        - mainline
+        - smbclient
+        - cifs-utils
+        - python3-smbc
+        - ncdu
+        - texstudio
+        - texlive
+        - texlive-latex-extra
+        - code
+    - name: Remove dependencies that are no longer required
+      apt:
+        autoremove: yes
+
+# install snap packages
+    - name: install snap packages w/o parameter
+      snap:
+        name: "{{ item }}"
+      loop:
+        - authy
+        - remmina
+        - slack
+        - spotify
+        - vlc
+        - signal-desktop
+
+# configure zsh shell
+- hosts: local
+  become: false
+  tasks:
+    - name: Install oh-my-zsh
+      git:
+        repo: https://github.com/ohmyzsh/ohmyzsh.git
+        dest: ~/.oh-my-zsh
+        depth: 1
+    - name: Copy .zshrc template config
+      copy:
+        src: ~/.oh-my-zsh/templates/zshrc.zsh-template
+        dest: ~/.zshrc
+    - name: Install powerlevel10k theme for zsh
+      git:
+        repo: https://github.com/romkatv/powerlevel10k.git
+        dest: ~/.oh-my-zsh/custom/themes/powerlevel10k
+        depth: 1
+    - name: Set powerlevel10k theme in .zshrc
+      ansible.builtin.replace:
+        path: ~/.zshrc
+        regexp: 'ZSH_THEME=".+"'
+        replace: 'ZSH_THEME="powerlevel10k/powerlevel10k"'
+    - name: Install zsh syntax highlighting
+      git:
+        repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+        dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+        depth: 1
+    - name: Install zsh zsh-autosuggestions
+      git:
+        repo: https://github.com/zsh-users/zsh-autosuggestions
+        dest: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+        depth: 1
+    - name: Set zsh plugins in .zshrc
+      ansible.builtin.replace:
+        path: ~/.zshrc
+        regexp: 'plugins=\(.+\)'
+        replace: 'plugins=(git zsh-syntax-highlighting zsh-autosuggestions)'
+    - name: Create ~/.fonts directory
+      ansible.builtin.file:
+        path: ~/.fonts
+        state: directory
+    - name: Font MesloLGS NF Regular.ttf for powerlevel10k zsh theme
+      get_url:
+        url: "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf"
+        dest: "~/.fonts/MesloLGS NF Regular.ttf"
+    - name: Font MesloLGS NF Bold.ttf for powerlevel10k zsh theme
+      get_url:
+        url: "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf"
+        dest: "~/.fonts/MesloLGS NF Bold.ttf"
+    - name: Font MesloLGS NF Italic.ttf for powerlevel10k zsh theme
+      get_url:
+        url: "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf"
+        dest: "~/.fonts/MesloLGS NF Italic.ttf"
+    - name: Font MesloLGS NF Bold Italic.ttf for powerlevel10k zsh theme
+      get_url:
+        url: "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf"
+        dest: "~/.fonts/MesloLGS NF Bold Italic.ttf"
+
+- hosts: local
+  become: true
+  tasks:
+# set shell to ZSH
+    - name: set shell to ZSH
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        shell: /bin/zsh
+
+# change .ssh folder and files permissions
+    - name: change .ssh directory permission
+      file:
+        path: "/home/{{ ansible_user }}/.ssh"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 0700
+        recurse: yes
+
+    - name: change permission ssh config
+      file:
+        path: "/home/{{ ansible_user }}/.ssh/config"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 0600
+
+    - name: find pub files
+      find:
+        paths: "home/{{ ansible_user }}/.ssh"
+        patterns: "*.pub"
+      register: pub_files_to_change
+
+    - name: change permissions on pub files
+      file:
+        path: "{{ item.path }}"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 0644
+      with_items: "{{ pub_files_to_change.files }}"
+
+    - name: find key files
+      find:
+        paths: "home/{{ ansible_user }}/.ssh"
+        patterns: "*.key"
+      register: key_files_to_change
+
+    - name: change permissions on key files
+      file:
+        path: "{{ item.path }}"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 0600
+      with_items: "{{ key_files_to_change.files }}"
+
+
+# start and enable kvm service
+    # - name: enable service libvirtd and start it
+    #   ansible.builtin.service:
+    #     name: libvirtd
+    #     enabled: yes
+    #     state: started
+
+# dpkg downloads
+    # - name: Install a .deb package from the internet
+    #   apt:
+    #     deb: https://code.visualstudio.com/docs/?dv=linux64_deb
+    # - name: dpkg packages - get vscode
+    #   get_url:
+    #     url: https://code.visualstudio.com/docs/?dv=linux64_deb
+    #     dest: /tmp/vscode-latest.deb
+    #   command: /usr/bin/apt install -f /tmp/vscode-latest.deb -y
+
+# restore backup
+
+    # - name: sync backup
+    #   become: false
+    #   synchronize:
+    #     mode: pull
+    #     src: /media/user/some_external_hdd
+    #     dest: /home/user/tmp
+    #     times: yes
+    #     recursive: yes
+    #   delegate_to: localhost
