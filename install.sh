@@ -1,6 +1,5 @@
 #!/bin/bash
-echo "What's your username?"
-read ansible_user
+ansible_user=$(whoami)
 sed -i -E "s/(ansible_user=.+)/ansible_user=$ansible_user/g" host.ini
 if ! hash ansible >/dev/null 2>&1; then
     echo "Installing Ansible..."

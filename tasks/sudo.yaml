@@ -1,0 +1,80 @@
+# set shell to ZSH
+- name: set shell to ZSH
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    shell: /bin/zsh
+
+# change .ssh folder and files permissions
+- name: change .ssh directory permission
+  file:
+    path: "/home/{{ ansible_user }}/.ssh"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0700
+    recurse: yes
+
+- name: change permission ssh config
+  file:
+    path: "/home/{{ ansible_user }}/.ssh/config"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0600
+
+- name: find pub files
+  find:
+    paths: "home/{{ ansible_user }}/.ssh"
+    patterns: "*.pub"
+  register: pub_files_to_change
+
+- name: change permissions on pub files
+  file:
+    path: "{{ item.path }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0644
+  with_items: "{{ pub_files_to_change.files }}"
+
+- name: find key files
+  find:
+    paths: "home/{{ ansible_user }}/.ssh"
+    patterns: "*.key"
+  register: key_files_to_change
+
+- name: change permissions on key files
+  file:
+    path: "{{ item.path }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0600
+  with_items: "{{ key_files_to_change.files }}"
+
+
+# start and enable kvm service
+    # - name: enable service libvirtd and start it
+    #   ansible.builtin.service:
+    #     name: libvirtd
+    #     enabled: yes
+    #     state: started
+
+# dpkg downloads
+    # - name: Install a .deb package from the internet
+    #   apt:
+    #     deb: https://code.visualstudio.com/docs/?dv=linux64_deb
+    # - name: dpkg packages - get vscode
+    #   get_url:
+    #     url: https://code.visualstudio.com/docs/?dv=linux64_deb
+    #     dest: /tmp/vscode-latest.deb
+    #   command: /usr/bin/apt install -f /tmp/vscode-latest.deb -y
+
+# restore backup
+
+    # - name: sync backup
+    #   become: false
+    #   synchronize:
+    #     mode: pull
+    #     src: /media/user/some_external_hdd
+    #     dest: /home/user/tmp
+    #     times: yes
+    #     recursive: yes
+    #   delegate_to: localhost
