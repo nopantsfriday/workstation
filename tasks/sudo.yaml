@@ -1,11 +1,11 @@
 # set shell to ZSH
-- name: set shell to ZSH
+- name: SUDO - set shell to ZSH
   ansible.builtin.user:
     name: "{{ ansible_user }}"
     shell: /bin/zsh
 
 # change .ssh folder and files permissions
-- name: change .ssh directory permission
+- name: SUDO - change .ssh directory permission
   file:
     path: "/home/{{ ansible_user }}/.ssh"
     state: directory
@@ -14,20 +14,20 @@
     mode: 0700
     recurse: yes
 
-- name: change permission ssh config
+- name: SUDO - change permission ssh config
   file:
     path: "/home/{{ ansible_user }}/.ssh/config"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0600
 
-- name: find pub files
+- name: SUDO - find pub files
   find:
     paths: "home/{{ ansible_user }}/.ssh"
     patterns: "*.pub"
   register: pub_files_to_change
 
-- name: change permissions on pub files
+- name: SUDO - change permissions on pub files
   file:
     path: "{{ item.path }}"
     owner: "{{ ansible_user }}"
@@ -35,13 +35,13 @@
     mode: 0644
   with_items: "{{ pub_files_to_change.files }}"
 
-- name: find key files
+- name: SUDO - find key files
   find:
     paths: "home/{{ ansible_user }}/.ssh"
     patterns: "*.key"
   register: key_files_to_change
 
-- name: change permissions on key files
+- name: SUDO - change permissions on key files
   file:
     path: "{{ item.path }}"
     owner: "{{ ansible_user }}"
@@ -51,17 +51,17 @@
 
 
 # start and enable kvm service
-    # - name: enable service libvirtd and start it
+    # - name: SUDO - enable service libvirtd and start it
     #   ansible.builtin.service:
     #     name: libvirtd
     #     enabled: yes
     #     state: started
 
 # dpkg downloads
-    # - name: Install a .deb package from the internet
+    # - name: SUDO - Install a .deb package from the internet
     #   apt:
     #     deb: https://code.visualstudio.com/docs/?dv=linux64_deb
-    # - name: dpkg packages - get vscode
+    # - name: SUDO - dpkg packages - get vscode
     #   get_url:
     #     url: https://code.visualstudio.com/docs/?dv=linux64_deb
     #     dest: /tmp/vscode-latest.deb
@@ -69,7 +69,7 @@
 
 # restore backup
 
-    # - name: sync backup
+    # - name: SUDO - sync backup
     #   become: false
     #   synchronize:
     #     mode: pull

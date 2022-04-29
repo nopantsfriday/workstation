@@ -1,40 +1,40 @@
 # update system
-- name: OS update - update apt repositories and cache
+- name: SOFTWARE - update apt repositories and cache
   apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
 
-- name: OS update - upgrade all
+- name: SOFTWARE - apt upgrade all
   apt: upgrade=dist force_apt_get=yes
 
 # install apt-transport-https
-- name: Preparation - insall apt-transport-https
+- name: SOFTWARE - insall apt-transport-https
   apt:
     name: apt-transport-https
     state: latest
     update_cache: true
 
 # add keys and additional repositories
-- name: Add signing keys - chrome browser
+- name: SOFTWARE - Add signing keys - chrome browser
   apt_key:
     url: "https://dl-ssl.google.com/linux/linux_signing_key.pub"
-- name: Add chrome browser repository
+- name: SOFTWARE - Add chrome browser repository
   apt_repository:
     repo: deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
     state: present
     filename: google-chrome
-- name: Add signing keys - vscode
+- name: SOFTWARE - Add signing keys - vscode
   apt_key:
     url: "https://packages.microsoft.com/keys/microsoft.asc"
-- name: Add vscode repository
+- name: SOFTWARE - Add vscode repository
   apt_repository:
     repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
     state: present
     filename: code
-- name: Add mainline ppa
+- name: SOFTWARE - Add mainline ppa
   apt_repository:
     repo: 'ppa:cappelikan/ppa'
 
 # install packages from repositories
-- name: Install tools from repositories
+- name: SOFTWARE - Install tools from repositories
   apt:
     name: "{{ item }}"
     state: latest
@@ -56,12 +56,12 @@
     - texlive
     - texlive-latex-extra
     - code
-- name: Remove dependencies that are no longer required
+- name: SOFTWARE - Remove dependencies that are no longer required
   apt:
     autoremove: yes
 
 # install snap packages
-- name: install snap packages w/o parameter
+- name: SOFTWARE - Install Snap packages
   snap:
     name: "{{ item }}"
   loop:

@@ -6,7 +6,7 @@
   become: false
   tasks:
     - include: tasks/zsh.yaml
-    - include: tasks/gnome.yaml
+    # - include: tasks/gnome.yaml
 - hosts: local
   become: true
   tasks:

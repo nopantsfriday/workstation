@@ -1,59 +1,59 @@
-- name: GNOME Preferences - Clock Format
+- name: GNOME - Clock Format
   dconf:
     key: "/org/gnome/desktop/interface/clock-format"
     value: "'24h'"
     state: present
-- name: GNOME Preferences - Nautilus - List view
+- name: GNOME - Nautilus - List view
   dconf:
     key: "/org/gnome/nautilus/preferences"
     value: "default-folder-viewer='list-view'"
     state: present
-- name: GNOME Preferences - Nautilus - Enable dark theme
+- name: GNOME - Nautilus - Enable dark theme
   dconf:
     key: "/org/gnome/desktop/interface/color-scheme"
     value: "prefer-dark"
     state: "present"
-- name: GNOME Preferences - Nautilus - Enable dark theme
+- name: GNOME - Nautilus - Enable dark theme
   dconf:
     key: "/org/gnome/desktop/interface/gtk-theme"
     value: "Yaru-dark"
     state: "present"
-- name: GNOME Preferences - Nautilus - Enable dark icon theme
+- name: GNOME - Nautilus - Enable dark icon theme
   dconf:
     key: "/org/gnome/desktop/interface/icon-theme"
     value: "Yaru"
     state: "present"
-- name: GNOME Preferences - Nautilus - Shortcut terminal
+- name: GNOME - Nautilus - Shortcut terminal
   dconf:
     key: "/org/gnome/settings-daemon/plugins/media-keys/terminal"
     value: "['<Super>t']"
     state: "present"
-- name: GNOME Preferences - Nautilus - Shortcut www browser
+- name: GNOME - Nautilus - Shortcut www browser
   dconf:
     key: "/org/gnome/settings-daemon/plugins/media-keys/www"
     value: "['<Super>b']"
     state: "present"
-- name: GNOME Preferences - Nautilus - Shortcut file browser
+- name: GNOME - Nautilus - Shortcut file browser
   dconf:
     key: "/org/gnome/settings-daemon/plugins/media-keys/home"
     value: "['<Super>f']"
-- name: GNOME Preferences - Power - No blank screen
+- name: GNOME - Power - No blank screen
   dconf:
     key: "/org/gnome/desktop/session/idle-delay"
     value: "uint32 0"
-- name: GNOME Preferences - Power - No screensaver
+- name: GNOME - Power - No screensaver
   dconf:
     key: "/org/gnome/desktop/screensaver/lock-delay"
     value: "uint32 0"
-- name: GNOME Preferences - Power - No sleep
+- name: GNOME - Power - No sleep
   dconf:
     key: "/org/gnome/settings-daemon/plugins/power/sleep-inactive-ac-type"
     value: "'nothing'"
-- name: GNOME Preferences - Power - Show battery percentage
+- name: GNOME - Power - Show battery percentage
   dconf:
     key: "/org/gnome/desktop/interface/show-battery-percentage"
     value: "true"
-- name: GNOME Preferences - Mouse - Disable accelleration
+- name: GNOME - Mouse - Disable accelleration
   dconf:
     key: "/org/gnome/desktop/peripherals/mouse/accel-profile"
     value: "flat"
