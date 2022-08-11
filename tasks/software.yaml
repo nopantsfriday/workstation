@@ -41,6 +41,7 @@
     update_cache: yes
   loop:
     - curl
+    - snapd
     - fonts-powerline
     - gnome-tweaks
     - google-chrome-stable
