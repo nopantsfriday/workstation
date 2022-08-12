@@ -6,7 +6,11 @@
   become: false
   tasks:
     - include: tasks/zsh.yaml
-    # - include: tasks/gnome.yaml
+- hosts: local
+  become: false
+  tasks:
+    - include: tasks/gnome.yaml
+      when: (ansible_facts['distribution'] == "Ubuntu")
 - hosts: local
   become: true
   tasks:

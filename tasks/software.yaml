@@ -18,7 +18,7 @@
     url: "https://dl-ssl.google.com/linux/linux_signing_key.pub"
 - name: SOFTWARE - Add chrome browser repository
   apt_repository:
-    repo: deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
+    repo: "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main"
     state: present
     filename: google-chrome
 - name: SOFTWARE - Add signing keys - vscode
@@ -26,21 +26,28 @@
     url: "https://packages.microsoft.com/keys/microsoft.asc"
 - name: SOFTWARE - Add vscode repository
   apt_repository:
-    repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
+    repo: "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
     state: present
     filename: code
 - name: SOFTWARE - Add mainline ppa
   apt_repository:
-    repo: 'ppa:cappelikan/ppa'
+    repo: "ppa:cappelikan/ppa"
 - name: SOFTWARE - Add signing keys - mainline
   apt_key:
     url: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3ae27527713d2479dcaffd58a89d7c1b2f76304d"
+
 - name: Software - Add signal-desktop
   apt_key:
     url: "https://updates.signal.org/desktop/apt/keys.asc"
-- name: SOFTWARE - Add signa-desktop repository
+- name: SOFTWARE - Add signal-desktop repository
   apt_repository:
     repo: deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main
+    state: present
+    filename: signal-desktop
+
+- name: SOFTWARE - Add signal-desktop repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main"
     state: present
     filename: signal-desktop
 - name: Software - Add spotify-client
@@ -48,10 +55,9 @@
     url: "https://download.spotify.com/debian/pubkey_5E3C45D7B312C643.gpg"
 - name: SOFTWARE - Add spotify-client repository
   apt_repository:
-    repo: http://repository.spotify.com stable non-free
+    repo: "deb http://repository.spotify.com stable non-free"
     state: present
     filename: spotify-client
-
 
 # install packages from repositories
 - name: SOFTWARE - Install tools from repositories
@@ -61,12 +67,12 @@
     update_cache: yes
   loop:
     - curl
-    - fonts-powerline
-    - gnome-tweaks
-    - google-chrome-stable
     - htop
     - wget
     - zsh
+    - fonts-powerline
+    - gnome-tweaks
+    - google-chrome-stable
     - mainline
     - smbclient
     - cifs-utils
@@ -79,15 +85,14 @@
     - vlc
     - flameshot
     - signal-desktop
-    - remmina 
+    - remmina
     - remmina-plugin-rdp
     - remmina-plugin-secret
-    - spotify
-    
+    - spotify-client
+
 - name: SOFTWARE - Remove dependencies that are no longer required
   apt:
     autoremove: yes
-
 # install snap packages
 #- name: SOFTWARE - Install Snap packages
 #  snap:
