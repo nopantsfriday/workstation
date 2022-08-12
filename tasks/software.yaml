@@ -32,6 +32,26 @@
 - name: SOFTWARE - Add mainline ppa
   apt_repository:
     repo: 'ppa:cappelikan/ppa'
+- name: SOFTWARE - Add signing keys - mainline
+  apt_key:
+    url: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3ae27527713d2479dcaffd58a89d7c1b2f76304d"
+- name: Software - Add signal-desktop
+  apt_key:
+    url: "https://updates.signal.org/desktop/apt/keys.asc"
+- name: SOFTWARE - Add signa-desktop repository
+  apt_repository:
+    repo: deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main
+    state: present
+    filename: signal-desktop
+- name: Software - Add spotify-client
+  apt_key:
+    url: "https://download.spotify.com/debian/pubkey_5E3C45D7B312C643.gpg"
+- name: SOFTWARE - Add spotify-client repository
+  apt_repository:
+    repo: http://repository.spotify.com stable non-free
+    state: present
+    filename: spotify-client
+
 
 # install packages from repositories
 - name: SOFTWARE - Install tools from repositories
@@ -41,7 +61,6 @@
     update_cache: yes
   loop:
     - curl
-    - snapd
     - fonts-powerline
     - gnome-tweaks
     - google-chrome-stable
@@ -57,18 +76,21 @@
     - texlive
     - texlive-latex-extra
     - code
+    - vlc
+    - flameshot
+    - signal-desktop
+    - remmina 
+    - remmina-plugin-rdp
+    - remmina-plugin-secret
+    - spotify
+    
 - name: SOFTWARE - Remove dependencies that are no longer required
   apt:
     autoremove: yes
 
 # install snap packages
-- name: SOFTWARE - Install Snap packages
-  snap:
-    name: "{{ item }}"
-  loop:
-    - authy
-    - remmina
-    - slack
-    - spotify
-    - vlc
-    - signal-desktop
+#- name: SOFTWARE - Install Snap packages
+#  snap:
+#    name: "{{ item }}"
+#  loop:
+#    - authy
