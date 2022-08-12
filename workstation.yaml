@@ -7,11 +7,11 @@
   tasks:
     - include: tasks/zsh.yaml
 - hosts: local
+  become: true
+  tasks:
+    - include: tasks/sudo.yaml
+- hosts: local
   become: false
   tasks:
     - include: tasks/gnome.yaml
       when: (ansible_facts['distribution'] == "Ubuntu")
-- hosts: local
-  become: true
-  tasks:
-    - include: tasks/sudo.yaml
