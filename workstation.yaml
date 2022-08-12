@@ -10,6 +10,7 @@
   become: true
   tasks:
     - include: tasks/sudo.yaml
+      ignore_errors: yes
 - hosts: local
   become: false
   tasks:

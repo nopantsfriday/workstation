@@ -32,7 +32,7 @@
   ansible.builtin.replace:
     path: ~/.zshrc
     regexp: 'plugins=\(.+\)'
-    replace: 'plugins=(git zsh-syntax-highlighting zsh-autosuggestions)'
+    replace: "plugins=(git zsh-syntax-highlighting zsh-autosuggestions)"
 - name: ZSH - Create ~/.fonts directory
   ansible.builtin.file:
     path: ~/.fonts

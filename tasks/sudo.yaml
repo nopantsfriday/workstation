@@ -48,33 +48,31 @@
     group: "{{ ansible_user }}"
     mode: 0600
   with_items: "{{ key_files_to_change.files }}"
-
-
 # start and enable kvm service
-    # - name: SUDO - enable service libvirtd and start it
-    #   ansible.builtin.service:
-    #     name: libvirtd
-    #     enabled: yes
-    #     state: started
+# - name: SUDO - enable service libvirtd and start it
+#   ansible.builtin.service:
+#     name: libvirtd
+#     enabled: yes
+#     state: started
 
 # dpkg downloads
-    # - name: SUDO - Install a .deb package from the internet
-    #   apt:
-    #     deb: https://code.visualstudio.com/docs/?dv=linux64_deb
-    # - name: SUDO - dpkg packages - get vscode
-    #   get_url:
-    #     url: https://code.visualstudio.com/docs/?dv=linux64_deb
-    #     dest: /tmp/vscode-latest.deb
-    #   command: /usr/bin/apt install -f /tmp/vscode-latest.deb -y
+# - name: SUDO - Install a .deb package from the internet
+#   apt:
+#     deb: https://code.visualstudio.com/docs/?dv=linux64_deb
+# - name: SUDO - dpkg packages - get vscode
+#   get_url:
+#     url: https://code.visualstudio.com/docs/?dv=linux64_deb
+#     dest: /tmp/vscode-latest.deb
+#   command: /usr/bin/apt install -f /tmp/vscode-latest.deb -y
 
 # restore backup
 
-    # - name: SUDO - sync backup
-    #   become: false
-    #   synchronize:
-    #     mode: pull
-    #     src: /media/user/some_external_hdd
-    #     dest: /home/user/tmp
-    #     times: yes
-    #     recursive: yes
-    #   delegate_to: localhost
+# - name: SUDO - sync backup
+#   become: false
+#   synchronize:
+#     mode: pull
+#     src: /media/user/some_external_hdd
+#     dest: /home/user/tmp
+#     times: yes
+#     recursive: yes
+#   delegate_to: localhost
