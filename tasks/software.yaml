@@ -41,12 +41,6 @@
     url: "https://updates.signal.org/desktop/apt/keys.asc"
 - name: SOFTWARE - Add signal-desktop repository
   apt_repository:
-    repo: deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main
-    state: present
-    filename: signal-desktop
-
-- name: SOFTWARE - Add signal-desktop repository
-  apt_repository:
     repo: "deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main"
     state: present
     filename: signal-desktop
@@ -82,6 +76,7 @@
     - texlive
     - texlive-latex-extra
     - code
+    - ssh-askpass
     - vlc
     - flameshot
     - signal-desktop
