@@ -35,8 +35,7 @@
 - name: SOFTWARE - Add signing keys - mainline
   apt_key:
     url: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3ae27527713d2479dcaffd58a89d7c1b2f76304d"
-
-- name: Software - Add signal-desktop
+- name: Software - Add signal-desktop repository
   apt_key:
     url: "https://updates.signal.org/desktop/apt/keys.asc"
 - name: SOFTWARE - Add signal-desktop repository
@@ -53,37 +52,72 @@
     state: present
     filename: spotify-client
 
-# install packages from repositories
-- name: SOFTWARE - Install tools from repositories
+- name: SOFTWARE - install packages
   apt:
-    name: "{{ item }}"
-    state: latest
-    update_cache: yes
-  loop:
-    - curl
-    - htop
-    - wget
-    - zsh
-    - fonts-powerline
-    - gnome-tweaks
-    - google-chrome-stable
-    - mainline
-    - smbclient
-    - cifs-utils
-    - python3-smbc
-    - ncdu
-    - texstudio
-    - texlive
-    - texlive-latex-extra
-    - code
-    - ssh-askpass
-    - vlc
-    - flameshot
-    - signal-desktop
-    - remmina
-    - remmina-plugin-rdp
-    - remmina-plugin-secret
-    - spotify-client
+    name:
+      - curl
+      - htop
+      - wget
+      - zsh
+      - fonts-powerline
+      - gnome-tweaks
+      - google-chrome-stable
+      - mainline
+      - smbclient
+      - cifs-utils
+      - python3-smbc
+      - ncdu
+      - texstudio
+      - texlive
+      - texlive-latex-extra
+      - code
+      - ssh-askpass
+      - vlc
+      - flameshot
+      - signal-desktop
+      - remmina
+      - remmina-plugin-rdp
+      - remmina-plugin-secret
+      - spotify-client
+  register: result
+  until: result is not failed
+  retries: 5
+  delay: 5
+
+# - name: SOFTWARE - Install tools from repositories
+  # apt:
+  #   name: "{{ item }}"
+  #   state: latest
+  #   update_cache: yes
+  # loop:
+  #   - curl
+  #   - htop
+  #   - wget
+  #   - zsh
+  #   - fonts-powerline
+  #   - gnome-tweaks
+  #   - google-chrome-stable
+  #   - mainline
+  #   - smbclient
+  #   - cifs-utils
+  #   - python3-smbc
+  #   - ncdu
+  #   - texstudio
+  #   - texlive
+  #   - texlive-latex-extra
+  #   - code
+  #   - ssh-askpass
+  #   - vlc
+  #   - flameshot
+  #   - signal-desktop
+  #   - remmina
+  #   - remmina-plugin-rdp
+  #   - remmina-plugin-secret
+  #   - spotify-client
+  # register: result
+  # until: result is not failed
+  # retries: 5
+  # delay: 5
 
 - name: SOFTWARE - Remove dependencies that are no longer required
   apt:
